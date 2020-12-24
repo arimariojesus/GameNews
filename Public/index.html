@@ -16,7 +16,7 @@
           <img src="./img/logo_color.png" alt="Game News" style="max-width: 250px">
         </div>
         <div class="col-md-6 text-right">
-          <button type="button" class="btn btn-outline-info">Novo</button>
+          <button type="button" class="btn btn-outline-info" id="btnNew">New Game</button>
         </div>
       </div>
     </header>
@@ -35,13 +35,13 @@
             <div class="card-footer">
               <div class="row">
                 <div class="col-md-3">
-                  <button type="button" name="button" class="md-2 w-100 btn btn-outline-warning">Edit</button>
+                  <button type="button" name="button" class="mt-2 w-100 btn btn-outline-warning">Edit</button>
                 </div>
                 <div class="col-md-6">
-                  <button type="button" name="button" class="md-2 w-100 btn btn-outline-success">View</button>
+                  <button type="button" name="button" class="mt-2 w-100 btn btn-outline-success" onclick="openModalViewGame(1)">View</button>
                 </div>
                 <div class="col-md-3">
-                  <button type="button" name="button" class="md-2 w-100 btn btn-outline-danger">Del</button>
+                  <button type="button" name="button" class="mt-2 w-100 btn btn-outline-danger" onclick="deleteGame(51)">Del</button>
                 </div>
               </div>
             </div>
@@ -49,6 +49,73 @@
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- MODAL FORM -->
+
+  <div class="modal fade" id="modalNewGame" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form id="formGame" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create or update new game</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="txtTitle">Title</label>
+                  <input type="hidden" id="txtId" value="">
+                  <input type="text" id="txtTitle" placeholder="Game title" class="form-control">
+                </div>
+
+                <div class="col-md-5">
+                  <label for="txtDescription">Description</label>
+                  <input type="text" id="txtDescription" placeholder="Game description" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                  <label for="txtVideoid">Video ID</label>
+                  <input type="text" id="txtVideoid" placeholder="6GlTmtXA7WA" class="form-control">
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <div class="alert alert-info" id="dvAlert">&nbsp;</div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL VIEW -->
+
+  <div class="modal fade" id="modalViewGame" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">View Game</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="gameInfo">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="./js/jquery-3.5.1.min.js"></script>
