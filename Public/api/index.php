@@ -10,12 +10,10 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once("../../vendor/autoload.php");
 use App\Controller\GameController;
 
-
-$controller = null;
-$id         = null; // Param
 $method     = $_SERVER["REQUEST_METHOD"]; // POST, PUT, DELETE, GET
 $uri = $_SERVER["REQUEST_URI"];
-
+$controller = null;
+$id         = null; // Param
 $data       = null;
 parse_str(file_get_contents('php://input'), $data);
 
