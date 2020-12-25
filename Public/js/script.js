@@ -27,6 +27,7 @@ function hideModalCreate(reset = true) {
 }
 
 function openModalViewGame(id) {
+  getById(id, true);
   $('#modalViewGame').modal('show');
 }
 
@@ -91,6 +92,20 @@ function resetForm() {
   $('#btnSubmit').attr('disabled', false);
 }
 
+function createViewModal(data) {
+  const title = document.querySelector('#titleView');
+  title.innerHTML = data.Titulo;
+
+  const bodyViewGame = document.querySelector('#gameInfo');
+  bodyViewGame.innerHTML = `
+    <div class="videoWrapper">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/${data.Videoid}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <hr class="border-info">
+    <div>${data.Descricao}</div>
+  `;
+}
+
 function createTable(data) {
   if(data.length < 1)
     return;
@@ -111,10 +126,10 @@ function createTable(data) {
           <div class='card-footer'>
             <div class='row'>
               <div class='col-md-3'>
-                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-warning'>Edit</button>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-warning' onclick="">Edit</button>
               </div>
               <div class='col-md-6'>
-                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-success' onclick='openModalViewGame(1)'>View</button>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-success' onclick='openModalViewGame(${data.Id})'>View</button>
               </div>
               <div class='col-md-3'>
                 <button type='button' name='button' class='mt-2 w-100 btn btn-outline-danger' onclick='confirmDelete(${data.Id})'>Del</button>
@@ -193,6 +208,25 @@ function deleteGame(id) {
     },
     error: function(error) {
       console.error(error);
+    }
+  });
+}
+
+// view = true || false => show modal or edit modal
+function getById(id, view) {
+  $.ajax({
+    url: "api/game/" + id,
+    type: "GET",
+    data: {},
+    datType: "JSON",
+    success: function(data) {
+      if(view) {
+        // show modal
+        createViewModal(data);
+      }else {
+        // edit modal
+
+      }
     }
   });
 }
