@@ -1,11 +1,17 @@
 "use strict";
 
+// EVENTS
+
 $(document).ready(function() {
   console.clear();
   getAll();
+
+  $('#modalViewGame').on('hidden.bs.modal', function(e) {
+    const bodyViewGame = document.querySelector('#gameInfo');
+  bodyViewGame.innerHTML = "";
+  });
 });
 
-// EVENTS
 $('#btnNew').click(function() {
   openModalCreate(true);
 });
@@ -14,6 +20,14 @@ $('#formGame').submit(function(e) {
   e.preventDefault();
   sendForm();
 });
+
+// FUNCTION
+function editGame(id) {
+  if(id < 1)
+    return;
+
+  getById(id, false);
+}
 
 function openModalCreate(reset = true) {
   $('#modalNewGame').modal('show');
@@ -59,7 +73,7 @@ function sendForm() {
   if(obj.id == 0) {
     create(obj);
   }else {
-    console.log("Editar");
+    update(obj);
   }
 }
 
@@ -126,7 +140,7 @@ function createTable(data) {
           <div class='card-footer'>
             <div class='row'>
               <div class='col-md-3'>
-                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-warning' onclick="">Edit</button>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-warning' onclick="editGame(${data.Id})">Edit</button>
               </div>
               <div class='col-md-6'>
                 <button type='button' name='button' class='mt-2 w-100 btn btn-outline-success' onclick='openModalViewGame(${data.Id})'>View</button>
@@ -142,6 +156,18 @@ function createTable(data) {
 
     section.innerHTML += card;
   });
+}
+
+function editModal(data) {
+  if(data == null)
+    return;
+  
+  $('#txtId').val(data.Id);
+  $('#txtTitle').val(data.Titulo);
+  $('#txtDescription').val(data.Descricao);
+  $('#txtVideoid').val(data.Videoid);
+
+  openModalCreate(false)
 }
 
 // AJAX
@@ -169,6 +195,38 @@ function create(obj) {
       // Quando houver algum erro na requisição
       console.error(error);
       $('#dvAlert').html("Houve um erro a tentar cadastrar");
+    },
+    complete: function() {
+      // Quando finaliza a operação
+      $('#btnSubmit').attr('disabled', false);
+    }
+  });
+}
+
+function update(obj) {
+  $.ajax({
+    url: "api/game/" + obj.id,
+    type: "PUT",
+    data: obj,
+    dataType: "json",
+    beforeSend: function() {
+      // É chamado antes de enviar
+      $('#btnSubmit').attr('disabled', true);
+    },
+    success: function(data) {
+      // Quando a requisição for efetuada com sucesso
+      console.log(data);
+      if(data.result == "ok"){
+        hideModalCreate();
+        getAll();
+      }else {
+        $('#dvAlert').html("Houve um erro a tentar alterar");
+      }
+    },
+    erro: function(error) {
+      // Quando houver algum erro na requisição
+      console.error(error);
+      $('#dvAlert').html("Houve um erro a tentar alterar");
     },
     complete: function() {
       // Quando finaliza a operação
@@ -225,7 +283,7 @@ function getById(id, view) {
         createViewModal(data);
       }else {
         // edit modal
-
+        editModal(data);
       }
     }
   });
