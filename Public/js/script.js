@@ -1,11 +1,29 @@
 "use strict";
 
+$(document).ready(function() {
+  console.clear();
+  getAll();
+});
+
+// EVENTS
 $('#btnNew').click(function() {
   openModalCreate(true);
 });
 
+$('#formGame').submit(function(e) {
+  e.preventDefault();
+  sendForm();
+});
+
 function openModalCreate(reset = true) {
   $('#modalNewGame').modal('show');
+
+  if (reset)
+    resetForm();
+}
+
+function hideModalCreate(reset = true) {
+  $('#modalNewGame').modal('hide');
 }
 
 function openModalViewGame(id) {
@@ -16,5 +34,146 @@ function deleteGame(id) {
   if(!confirm("Deseja realmente remover?"))
     return;
   
-    console.log(id);
+  console.log(id);
+}
+
+// SEND
+function sendForm() {
+  const obj = {
+    id: $('#txtId').val(),
+    titulo: $('#txtTitle').val(),
+    descricao: $('#txtDescription').val(),
+    videoid: $('#txtVideoid').val()
+  };
+
+  console.table(obj);
+
+  const result = validate(obj);
+  $('#dvAlert').text(result);
+
+  if(result != "") {
+    return;
+  }
+
+  if(obj.id == 0) {
+    create(obj);
+  }else {
+    console.log("Editar");
+  }
+}
+
+function validate(obj) {
+  if (obj.id < 0) {
+    return "ID invalid";
+  }
+
+  if (obj.titulo.length < 4 || obj.titulo.length > 100) {
+    return "Title invalid";
+  }
+
+  if (obj.descricao.length < 10 || obj.descricao.length > 250) {
+    return "Description invalid";
+  }
+
+  if (obj.videoid == "" || obj.videoid.length > 15) {
+    return "Video ID invalid";
+  }
+
+  return "";
+}
+
+function resetForm() {
+  $('#txtId').val("0");
+  $('#txtTitle').val("");
+  $('#txtDescription').val("");
+  $('#txtVideoid').val("");
+  $('#dvAlert').html("&nbsp;");
+  $('#btnSubmit').attr('disabled', false);
+}
+
+function createTable(data) {
+  if(data.length < 1)
+    return;
+
+  const section = document.querySelector('#section');
+  section.innerHTML = "";
+
+  data.forEach((data) => {
+    const card = `
+      <div class='col-md-4 mt-3'>
+        <div class='card border-primary'>
+          <div class='card-header'>${data.Titulo}</div>
+          <div class='card-body'>
+            <div class='videoWrapper'>
+              <iframe width='560' height='315' src='https://www.youtube.com/embed/${data.Videoid}' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class='card-footer'>
+            <div class='row'>
+              <div class='col-md-3'>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-warning'>Edit</button>
+              </div>
+              <div class='col-md-6'>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-success' onclick='openModalViewGame(1)'>View</button>
+              </div>
+              <div class='col-md-3'>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-danger' onclick='deleteGame(51)'>Del</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    section.innerHTML += card;
+  });
+}
+
+// AJAX
+function create(obj) {
+  $.ajax({
+    url: "api/game/",
+    type: "POST",
+    data: obj,
+    dataType: "json",
+    beforeSend: function() {
+      // É chamado antes de enviar
+      $('#btnSubmit').attr('disabled', true);
+    },
+    success: function(data) {
+      // Quando a requisição for efetuada com sucesso
+      console.log(data);
+      if(data.result == "ok"){
+        hideModalCreate();
+      }else {
+        $('#dvAlert').html("Houve um erro a tentar cadastrar");
+      }
+    },
+    erro: function(error) {
+      // Quando houver algum erro na requisição
+      console.error(error);
+      $('#dvAlert').html("Houve um erro a tentar cadastrar");
+    },
+    complete: function() {
+      // Quando finaliza a operação
+      $('#btnSubmit').attr('disabled', false);
+    }
+  });
+}
+
+function getAll() {
+  $.ajax({
+    url: "api/game",
+    type: "GET",
+    data: {},
+    dataType: "json",
+    success: function(data) {
+      console.table(data);
+      createTable(data);
+    },
+    error: function(error) {
+      console.erro(error);
+    }
+
+  });
 }
