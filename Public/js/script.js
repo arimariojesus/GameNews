@@ -129,7 +129,7 @@ function createTable(data) {
 
   data.forEach((data) => {
     const card = `
-      <div class='col-md-4 mt-3'>
+      <div class='col-md-4 mb-3'>
         <div class='card border-primary'>
           <div class='card-header'>${data.Titulo}</div>
           <div class='card-body'>
