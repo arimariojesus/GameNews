@@ -30,11 +30,11 @@ function openModalViewGame(id) {
   $('#modalViewGame').modal('show');
 }
 
-function deleteGame(id) {
+function confirmDelete(id) {
   if(!confirm("Deseja realmente remover?"))
     return;
   
-  console.log(id);
+  deleteGame(id);
 }
 
 // SEND
@@ -117,7 +117,7 @@ function createTable(data) {
                 <button type='button' name='button' class='mt-2 w-100 btn btn-outline-success' onclick='openModalViewGame(1)'>View</button>
               </div>
               <div class='col-md-3'>
-                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-danger' onclick='deleteGame(51)'>Del</button>
+                <button type='button' name='button' class='mt-2 w-100 btn btn-outline-danger' onclick='confirmDelete(${data.Id})'>Del</button>
               </div>
             </div>
           </div>
@@ -145,6 +145,7 @@ function create(obj) {
       console.log(data);
       if(data.result == "ok"){
         hideModalCreate();
+        getAll();
       }else {
         $('#dvAlert').html("Houve um erro a tentar cadastrar");
       }
@@ -175,5 +176,23 @@ function getAll() {
       console.erro(error);
     }
 
+  });
+}
+
+function deleteGame(id) {
+  $.ajax({
+    url: "api/game/" + id,
+    type: "DELETE",
+    dataType: "JSON",
+    data: {},
+    success: function(data) {
+      console.log(data);
+      if(data.result == "ok") {
+        getAll();
+      }
+    },
+    error: function(error) {
+      console.error(error);
+    }
   });
 }
