@@ -66,6 +66,18 @@ class GameModel {
   }
   
   // Internal Method
+
+  private function getLastId() {
+    $lastId = 0;
+
+    foreach($this->listGame as $g) {
+      if ($g->getId() > $lastId)
+        $lastId = $g->getId();
+    }
+
+    return ($lastId + 1);
+  }
+
   private function save() {
     $temp = [];
 
@@ -82,17 +94,6 @@ class GameModel {
 
     fwrite($fp, json_encode($temp));
     fclose($fp);
-  }
-
-  private function getLastId() {
-    $lastId = 0;
-
-    foreach($this->listGame as $g) {
-      if ($g->getId() > $lastId)
-        $lastId = $g->getId();
-    }
-
-    return ($lastId + 1);
   }
 
   private function load() {

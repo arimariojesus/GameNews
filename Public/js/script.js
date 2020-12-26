@@ -1,7 +1,6 @@
 "use strict";
 
 // EVENTS
-
 $(document).ready(function() {
   console.clear();
   getAll();
@@ -36,7 +35,7 @@ function openModalCreate(reset = true) {
     resetForm();
 }
 
-function hideModalCreate(reset = true) {
+function hideModalCreate() {
   $('#modalNewGame').modal('hide');
 }
 
@@ -242,7 +241,6 @@ function getAll() {
     data: {},
     dataType: "json",
     success: function(data) {
-      console.table(data);
       createTable(data);
     },
     error: function(error) {
@@ -270,7 +268,7 @@ function deleteGame(id) {
   });
 }
 
-// view = true || false => show modal or edit modal
+// view = true || false => show game modal or edit game modal
 function getById(id, view) {
   $.ajax({
     url: "api/game/" + id,
@@ -279,10 +277,10 @@ function getById(id, view) {
     datType: "JSON",
     success: function(data) {
       if(view) {
-        // show modal
+        // show game modal
         createViewModal(data);
       }else {
-        // edit modal
+        // edit game modal
         editModal(data);
       }
     }
