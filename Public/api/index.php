@@ -33,8 +33,6 @@ if (isset($ex[0]))
 if (isset($ex[1]))
   $id = $ex[1];
 
-// echo json_encode(["controller" => $controller, "id" => $id]);
-
 // FIM TRATA A URI
 $gameController = new GameController();
 
