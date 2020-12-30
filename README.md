@@ -33,6 +33,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 **Frontend:**
 - [jQuery](https://jquery.com/)
 - [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
+- [Bootstrap](https://getbootstrap.com/)
 
 <div id="layout"></div>
 
